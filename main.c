@@ -49,7 +49,7 @@ char *concat(int count, ...) {
 void exit_with_err(char *err_msg)
 {
 	free_stack();
-	fprintf(stderr, err_msg);
+	fprintf(stderr, "%s", err_msg);
 	exit(EXIT_FAILURE);
 }
 
