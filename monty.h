@@ -43,21 +43,21 @@ typedef struct instruction_s
 
 
 void __push(stack_t **h, int val);
-void __pint(stack_t **h);
-void __pop(stack_t **h);
-void __swap(stack_t **h);
-void __add(stack_t **h);
-void __nop(stack_t **h);
-void __sub(stack_t **h);
-void __div(stack_t **h);
-void __mul(stack_t **h);
-void __mod(stack_t **h);
-void __pchar(stack_t **h);
-void __pstr(stack_t **h);
-void __rotl(stack_t **h);
-void __rotr(stack_t **h);
-void __stack(stack_t **h);
-void __queue(stack_t **h);
+void __pint(__attribute__((unused)) stack_t **h);
+void __pop(__attribute__((unused)) stack_t **h);
+void __swap(__attribute__((unused)) stack_t **h);
+void __add(__attribute__((unused)) stack_t **h);
+void __nop(__attribute__((unused)) stack_t **h);
+void __sub(__attribute__((unused)) stack_t **h);
+void __div(__attribute__((unused)) stack_t **h);
+void __mul(__attribute__((unused)) stack_t **h);
+void __mod(__attribute__((unused)) stack_t **h);
+void __pchar(__attribute__((unused)) stack_t **h);
+void __pstr(__attribute__((unused)) stack_t **h);
+void __rotl(__attribute__((unused)) stack_t **h);
+void __rotr(__attribute__((unused)) stack_t **h);
+void __stack(__attribute__((unused)) stack_t **h);
+void __queue(__attribute__((unused)) stack_t **h);
 void __pall(stack_t **h);
 
 void *my_malloc(size_t size);

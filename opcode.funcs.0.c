@@ -9,24 +9,24 @@ void __push(stack_t **h, int val)
 		add_dnodeint_end(h, val);
 }
 
-void __pint(stack_t **h)
+void __pint(__attribute__((unused)) stack_t **h)
 {
-	//
+	/**/
 }
 
-void __pop(stack_t **h)
+void __pop(__attribute__((unused)) stack_t **h)
 {
-	//
+	/**/
 }
 
-void __swap(stack_t **h)
+void __swap(__attribute__((unused)) stack_t **h)
 {
-	//
+	/**/
 }
 
-void __add(stack_t **h)
+void __add(__attribute__((unused)) stack_t **h)
 {
-	//
+	/**/
 }
 
 

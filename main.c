@@ -1,6 +1,16 @@
 #include "monty.h"
+
 unsigned int LIFO = 1;
 stack_t *stack = NULL;
+
+char *strdup(const char *str) {
+  char *dup = malloc(strlen(str) + 1);
+  if (dup) {
+      strcpy(dup, str);
+  }
+  return dup;
+}
+
 
 void free_stack()
 {
@@ -20,11 +30,15 @@ int is_regular_file(const char *path)
 
 char *concat(int count, ...) {
    va_list args;
+   char* result;
+   int i;
+   char* str;
+
    va_start(args, count);
-   char* result = malloc(1);
+   result = malloc(1);
    result[0] = '\0';
-   for (int i = 0; i < count; i++) {
-       char* str = va_arg(args, char*);
+   for (i = 0; i < count; i++) {
+       str = va_arg(args, char*);
        result = realloc(result, strlen(result) + strlen(str) + 1);
        strcat(result, str);
    }
@@ -60,7 +74,7 @@ void lstrip(char **str)
 char *cut_str_before_space(char *str)
 {
 	unsigned int idx = 0;
-	char *result, chr;
+	char result[BUF_SIZE], chr;
 
 	while (1)
 	{
@@ -72,20 +86,17 @@ char *cut_str_before_space(char *str)
 	if (idx)
 	{
 		strncpy(result, str, idx);
-		result = strdup(result);
 		result[idx] = '\0';
-		// while (idx--)
-		// 	(*str)++;
-		return (result);
+		return (strdup(result));
 	}
 	else
-		return (strdup(""));
+		return ("");
 }
 
 int isInt(char *i)
 {
 	char *end;
-	long num = strtol(i, &end, 10);
+	strtol(i, &end, 10);
 
 	if (*end != '\0') {
 		return (0);

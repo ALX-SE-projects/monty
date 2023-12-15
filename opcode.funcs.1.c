@@ -1,27 +1,27 @@
 #include "monty.h"
 
-void __nop(stack_t **h)
+void __nop(__attribute__((unused)) stack_t **h)
 {
-	//
+	/**/
 }
 
-void __sub(stack_t **h)
+void __sub(__attribute__((unused)) stack_t **h)
 {
-	//
+	/**/
 }
 
-void __div(stack_t **h)
+void __div(__attribute__((unused)) stack_t **h)
 {
-	//
+	/**/
 }
 
-void __mul(stack_t **h)
+void __mul(__attribute__((unused)) stack_t **h)
 {
-	//
+	/**/
 }
 
-void __mod(stack_t **h)
+void __mod(__attribute__((unused)) stack_t **h)
 {
-	//
+	/**/
 }
 
