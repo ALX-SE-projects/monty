@@ -153,6 +153,8 @@ void parseLine(stack_t **h, char *line, const unsigned int lineNumber)
 		__queue(h);
 	else if (!strcmp(opcode, "pall"))
 		__pall(h);
+	else if (!strcmp(opcode, ""))
+	{}
 	else
 		exit_with_err(concat(5, "L", strLineNumber, ": unknown instruction ", opcode, "\n"));
 }
