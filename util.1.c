@@ -115,5 +115,15 @@ char *createLstrippedString(char *buffer, stack_t **h)
 		strcpy(bufferPtr, buffer);
 	}
 	free(buffer);
+	/*
+	* Every good language comes with the capability of commenting.
+	* When the first non-space character of a line is #,
+	* treat this line as a comment (don’t do anything).
+	*/
+	if (bufferPtr[0] == '#')
+	{
+		buffer[0] = '\n';
+		buffer[1] = '\0';
+	}
 	return (bufferPtr);
 }
