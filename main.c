@@ -3,49 +3,11 @@
 unsigned int LIFO = 1;
 stack_t *stack = NULL;
 
-char *strdup(const char *str)
-{
-	char *dup = malloc(strlen(str) + 1);
-
-	if (dup)
-		strcpy(dup, str);
-	return (dup);
-}
-
 
 void free_stack(void)
 {
 	if (stack)
 		free_dlistint(stack);
-}
-
-int is_regular_file(const char *path)
-{
-	struct stat path_stat;
-
-	if (access(path, F_OK) != -1 && stat(path, &path_stat) == 0)
-		return (S_ISREG(path_stat.st_mode));
-	return (0);
-}
-
-char *concat(int count, ...)
-{
-	va_list args;
-	char *result;
-	int i;
-	char *str;
-
-	va_start(args, count);
-	result = malloc(1);
-	result[0] = '\0';
-	for (i = 0; i < count; i++)
-	{
-		str = va_arg(args, char*);
-		result = realloc(result, strlen(result) + strlen(str) + 1);
-		strcat(result, str);
-	}
-	va_end(args);
-	return (result);
 }
 
 void exit_with_err(char *err_msg, unsigned int free_str)
@@ -64,6 +26,66 @@ void *my_malloc(size_t size)
 	if (!ptr)
 		exit_with_err("Error: malloc failed\n", 0);
 	return (ptr);
+}
+
+void *my_realloc(void* ptr, size_t old_size, size_t new_size)
+{
+   void* new_ptr;
+   if (!new_size)
+   {
+       free(ptr);
+       return (NULL);
+   }
+   new_ptr = my_malloc(new_size);
+   if (!new_ptr)
+       return (NULL);
+   if (ptr)
+   {
+       size_t copy_size = old_size < new_size ? old_size : new_size;
+       memcpy(new_ptr, ptr, copy_size);
+       free(ptr);
+   }
+   return (new_ptr);
+}
+
+char *strdup(const char *str)
+{
+	char *dup = malloc(strlen(str) + 1);
+
+	if (dup)
+		strcpy(dup, str);
+	return (dup);
+}
+
+int is_regular_file(const char *path)
+{
+	struct stat path_stat;
+
+	if (access(path, F_OK) != -1 && stat(path, &path_stat) == 0)
+		return (S_ISREG(path_stat.st_mode));
+	return (0);
+}
+
+char *concat(int count, ...)
+{
+	va_list args;
+	char *result;
+	int i;
+	char *str;
+	unsigned int len;
+
+	va_start(args, count);
+	result = malloc(1);
+	result[0] = '\0';
+	for (i = 0; i < count; i++)
+	{
+		str = va_arg(args, char*);
+		len = strlen(result);
+		result = my_realloc(result, len + 1, len + strlen(str) + 1);
+		strcat(result, str);
+	}
+	va_end(args);
+	return (result);
 }
 
 void lstrip(char **str)
@@ -114,7 +136,7 @@ int isInt(char *i)
 
 void parseLine(stack_t **h, char **line, const unsigned int lineNumber)
 {
-	char *opcode = my_malloc(1), *arg;
+	char *opcode, *arg;
 	char strLineNumber[BUF_SIZE];
 
 	sprintf(strLineNumber, "%u", lineNumber);
@@ -186,9 +208,10 @@ char *createLstrippedString(char *buffer)
 	}
 	else
 	{
-		bufferPtr = my_malloc(len);
+		bufferPtr = my_malloc(len + 1);
 		strcpy(bufferPtr, buffer);
 	}
+	free(buffer);
 	return (bufferPtr);
 }
 
@@ -207,7 +230,7 @@ int main(int argc, char *argv[])
 	filePointer = fopen(filename, "r");
 	while (fgets(buffer, BUF_SIZE, filePointer))
 	{
-		bufferPtr = createLstrippedString(buffer);
+		bufferPtr = createLstrippedString(strdup(buffer));
 		bufferPtrReserve = bufferPtr;
 		if (strcmp("\n", bufferPtr))
 			parseLine(&stack, &bufferPtr, lineNumber);
