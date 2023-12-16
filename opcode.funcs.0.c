@@ -30,9 +30,27 @@ void __pop(stack_t **h, char *strLineNumber)
 	free(t);
 }
 
-void __swap(__attribute__((unused)) stack_t **h)
+void __swap(stack_t **h, char *strLineNumber)
 {
-	/**/
+	int i = 0;
+	stack_t *t = NULL;
+
+	t = *h;
+	while (t)
+	{
+		t = t->next;
+		i++;
+	}
+	if (i < 2)
+		exit_with_err(
+			concat(3, "L", strLineNumber, ": can't swap, stack too short\n"),
+				1);
+	t = *h;
+	*h = (*h)->next;
+	t->next = (*h)->next;
+	t->prev = *h;
+	(*h)->next = t;
+	(*h)->prev = NULL;
 }
 
 void __add(__attribute__((unused)) stack_t **h)
