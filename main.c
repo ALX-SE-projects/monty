@@ -5,7 +5,7 @@ stack_t *stack = NULL;
 
 void exit_with_err(char *err_msg, unsigned int free_str)
 {
-	free_dlistint(stack);
+	free_dlistint(&stack);
 	fprintf(stderr, "%s", err_msg);
 	if (free_str)
 		free(err_msg);
@@ -230,7 +230,7 @@ int main(int argc, char *argv[])
 		lineNumber++;
 		free(bufferPtrReserve);
 	}
-	free_dlistint(stack);
+	free_dlistint(&stack);
 	fclose(filePointer);
 	return (0);
 }

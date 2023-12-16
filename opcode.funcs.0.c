@@ -33,7 +33,7 @@ void __pop(stack_t **h, char *strLineNumber)
 void __swap(stack_t **h, char *strLineNumber)
 {
 	int i = 0;
-	stack_t *t = NULL;
+	stack_t *t;;
 
 	t = *h;
 	while (t)
