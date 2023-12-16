@@ -73,7 +73,7 @@ int delete_dnodeint_at_index(stack_t **head, unsigned int index);
 void exit_with_err(char *err_msg, unsigned int free_str, stack_t **stack);
 void *my_malloc(size_t size, stack_t **h);
 void *my_realloc(void *ptr, size_t old_size, size_t new_size, stack_t **h);
-char *strdup(const char *str, stack_t **h);
+char *my_strdup(const char *str, stack_t **h);
 int is_regular_file(const char *path);
 char *concat(stack_t **h, int count, ...);
 void lstrip(char **str);
