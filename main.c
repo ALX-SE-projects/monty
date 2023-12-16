@@ -110,14 +110,15 @@ void parseLine(stack_t **h, char *line, const unsigned int lineNumber)
 	char strLineNumber[BUF_SIZE];
 
 	sprintf(strLineNumber, "%u", lineNumber);
-	lstrip(&line);
+	/* lstrip(&line); */
 	opcode = cut_str_before_space(strdup(line));
 	line += strlen(opcode);
 	if (!strcmp(opcode, "push"))
 	{
 		lstrip(&line);
 		arg = cut_str_before_space(strdup(line));
-		if (!isInt(arg))
+		/* printf("-%s-%s-%c-%ld-\n", opcode, arg, arg[0], strlen(arg)); */
+		if (!strlen(arg) || !isInt(arg))
 			exit_with_err(concat(3, "L", strLineNumber, ": usage: push integer\n"));
 		__push(h, atoi(arg));
 	}
@@ -153,16 +154,17 @@ void parseLine(stack_t **h, char *line, const unsigned int lineNumber)
 		__queue(h);
 	else if (!strcmp(opcode, "pall"))
 		__pall(h);
-	else if (!strcmp(opcode, ""))
-	{}
 	else
 		exit_with_err(concat(5, "L", strLineNumber, ": unknown instruction ", opcode, "\n"));
 }
+
+
 
 int main(int argc, char *argv[])
 {
 	FILE *filePointer;
 	char buffer[BUF_SIZE];
+	char *bufferPtr;
 	char *filename;
 	unsigned int lineNumber = 1;
 	stack = NULL;
@@ -176,8 +178,13 @@ int main(int argc, char *argv[])
 	filePointer = fopen(filename, "r");
 	while(fgets(buffer, BUF_SIZE, filePointer))
 	{
-		parseLine(&stack, buffer, lineNumber);
+		bufferPtr = my_malloc(strlen(buffer));
+		strcpy(bufferPtr, buffer);
+		lstrip(&bufferPtr);
+		if (strcmp("\n", bufferPtr))
+			parseLine(&stack, bufferPtr, lineNumber);
 		lineNumber++;
+		free(bufferPtr);
 	}
 	free_stack();
 	fclose(filePointer);
