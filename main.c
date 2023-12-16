@@ -94,7 +94,6 @@ void parseLine2(
 	free(opcode);
 }
 
-
 /**
  * main - entry point
  * @argc: count of string arguments
@@ -105,7 +104,7 @@ void parseLine2(
 int main(int argc, char *argv[])
 {
 	FILE *filePointer;
-	char buffer[BUF_SIZE], *bufferPtr, *bufferPtrReserve, *filename;
+	char buffer[BUF_SIZE], *bufferPtr, *bufferPtrReserve, *filename, *m_test;
 	unsigned int lineNumber = 1, LIFO = 1;
 	stack_t *stack = NULL;
 
@@ -115,6 +114,10 @@ int main(int argc, char *argv[])
 		exit_with_err(concat(&stack, 3, "Error: Can't open file ", argv[1], "\n"),
 			1, &stack);
 	filename = argv[1];
+	/* try the malloc function before anything */
+	m_test = my_malloc(1, &stack);
+	free(m_test);
+	/* --- */
 	filePointer = fopen(filename, "r");
 	while (fgets(buffer, BUF_SIZE, filePointer))
 	{

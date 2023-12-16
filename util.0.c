@@ -26,7 +26,7 @@ void *my_malloc(size_t size, stack_t **h)
 {
 	void *ptr = malloc(size);
 
-	if (ptr == NULL)
+	if (!ptr)
 		exit_with_err("Error: malloc failed\n", 0, h);
 	return (ptr);
 }

@@ -80,5 +80,6 @@ void lstrip(char **str);
 char *cut_str_before_space(char **str, stack_t **h);
 int isInt(char *i);
 char *createLstrippedString(char *buffer, stack_t **h);
+
 #endif
 
