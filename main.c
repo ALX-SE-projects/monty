@@ -46,10 +46,12 @@ char *concat(int count, ...) {
    return result;
 }
 
-void exit_with_err(char *err_msg)
+void exit_with_err(char *err_msg, unsigned int free_str)
 {
 	free_stack();
 	fprintf(stderr, "%s", err_msg);
+	if (free_str)
+		free(err_msg);
 	exit(EXIT_FAILURE);
 }
 
@@ -58,7 +60,7 @@ void *my_malloc(size_t size)
 	void *ptr = malloc(size);
 
 	if (!ptr)
-		exit_with_err("Error: malloc failed\n");
+		exit_with_err("Error: malloc failed\n", 0);
 	return (ptr);
 }
 
@@ -71,26 +73,28 @@ void lstrip(char **str)
 /**
  *
  */
-char *cut_str_before_space(char *str)
+char *cut_str_before_space(char **str)
 {
 	unsigned int idx = 0;
-	char result[BUF_SIZE], chr;
+	char result[BUF_SIZE], chr, *resultPtr;
 
 	while (1)
 	{
-		chr = str[idx];
+		chr = (*str)[idx];
 		if (!(chr != '\0' && chr != SPACE && chr != '\n'))
 			break;
 		idx++;
 	}
+
 	if (idx)
 	{
-		strncpy(result, str, idx);
+		strncpy(result, *str, idx);
 		result[idx] = '\0';
-		return (strdup(result));
+		resultPtr = strdup(result);
 	}
 	else
-		return ("");
+		resultPtr = strdup("");
+	return (resultPtr);
 }
 
 int isInt(char *i)
@@ -104,23 +108,24 @@ int isInt(char *i)
 	return (1);
 }
 
-void parseLine(stack_t **h, char *line, const unsigned int lineNumber)
+void parseLine(stack_t **h, char **line, const unsigned int lineNumber)
 {
 	char *opcode, *arg;
 	char strLineNumber[BUF_SIZE];
 
 	sprintf(strLineNumber, "%u", lineNumber);
 	/* lstrip(&line); */
-	opcode = cut_str_before_space(strdup(line));
-	line += strlen(opcode);
+	opcode = cut_str_before_space(line);
+	(*line) += strlen(opcode);
 	if (!strcmp(opcode, "push"))
 	{
-		lstrip(&line);
-		arg = cut_str_before_space(strdup(line));
+		lstrip(line);
+		arg = cut_str_before_space(line);
 		/* printf("-%s-%s-%c-%ld-\n", opcode, arg, arg[0], strlen(arg)); */
 		if (!strlen(arg) || !isInt(arg))
-			exit_with_err(concat(3, "L", strLineNumber, ": usage: push integer\n"));
+			exit_with_err(concat(3, "L", strLineNumber, ": usage: push integer\n"), 1);
 		__push(h, atoi(arg));
+		free(arg);
 	}
 	else if (!strcmp(opcode, "pint"))
 		__pint(h);
@@ -155,7 +160,8 @@ void parseLine(stack_t **h, char *line, const unsigned int lineNumber)
 	else if (!strcmp(opcode, "pall"))
 		__pall(h);
 	else
-		exit_with_err(concat(5, "L", strLineNumber, ": unknown instruction ", opcode, "\n"));
+		exit_with_err(concat(5, "L", strLineNumber, ": unknown instruction ", opcode, "\n"), 1);
+	free(opcode);
 }
 
 
@@ -164,27 +170,28 @@ int main(int argc, char *argv[])
 {
 	FILE *filePointer;
 	char buffer[BUF_SIZE];
-	char *bufferPtr;
+	char *bufferPtr, *bufferPtrReserve;
 	char *filename;
 	unsigned int lineNumber = 1;
 	stack = NULL;
 
 	if (argc != 2)
-		exit_with_err("USAGE: monty file\n");
+		exit_with_err("USAGE: monty file\n", 0);
 	else if (!is_regular_file(argv[1]))
-		exit_with_err(strcat(strcat("Error: Can't open file ", argv[1]), "\n"));
+		exit_with_err(concat(3, "Error: Can't open file ", argv[1], "\n"), 1);
 
 	filename = argv[1];
 	filePointer = fopen(filename, "r");
 	while(fgets(buffer, BUF_SIZE, filePointer))
 	{
 		bufferPtr = my_malloc(strlen(buffer));
+		bufferPtrReserve = bufferPtr;
 		strcpy(bufferPtr, buffer);
 		lstrip(&bufferPtr);
 		if (strcmp("\n", bufferPtr))
-			parseLine(&stack, bufferPtr, lineNumber);
+			parseLine(&stack, &bufferPtr, lineNumber);
 		lineNumber++;
-		free(bufferPtr);
+		free(bufferPtrReserve);
 	}
 	free_stack();
 	fclose(filePointer);
