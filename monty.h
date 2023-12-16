@@ -43,7 +43,7 @@ typedef struct instruction_s
 
 void __push(stack_t **h, int val);
 void __pint(stack_t **h, char *strLineNumber);
-void __pop(__attribute__((unused)) stack_t **h);
+void __pop(stack_t **h, char *strLineNumber);
 void __swap(__attribute__((unused)) stack_t **h);
 void __add(__attribute__((unused)) stack_t **h);
 void __nop(__attribute__((unused)) stack_t **h);

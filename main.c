@@ -150,7 +150,7 @@ void parseLine(stack_t **h, char **line, unsigned int lineNumber)
 	else if (!strcmp(opcode, "pint"))
 		__pint(h, strLineNumber);
 	else if (!strcmp(opcode, "pop"))
-		__pop(h);
+		__pop(h, strLineNumber);
 	else if (!strcmp(opcode, "swap"))
 		__swap(h);
 	else if (!strcmp(opcode, "add"))
