@@ -58,9 +58,7 @@ void __rotr(stack_t **h);
 void __stack(unsigned int *LIFO);
 void __queue(unsigned int *LIFO);
 void __pall(stack_t **h);
-char *concat(int count, ...);
 
-void *my_malloc(size_t size);
 size_t print_dlistint(stack_t *h);
 size_t dlistint_len(const stack_t *h);
 stack_t *add_dnodeint(stack_t **head, const int n);
@@ -73,14 +71,14 @@ stack_t *insert_dnodeint_at_index(stack_t **h, unsigned int idx, int n);
 int delete_dnodeint_at_index(stack_t **head, unsigned int index);
 
 void exit_with_err(char *err_msg, unsigned int free_str, stack_t **stack);
-void *my_malloc(size_t size);
-void *my_realloc(void *ptr, size_t old_size, size_t new_size);
-char *strdup(const char *str);
+void *my_malloc(size_t size, stack_t **h);
+void *my_realloc(void *ptr, size_t old_size, size_t new_size, stack_t **h);
+char *strdup(const char *str, stack_t **h);
 int is_regular_file(const char *path);
-char *concat(int count, ...);
+char *concat(stack_t **h, int count, ...);
 void lstrip(char **str);
-char *cut_str_before_space(char **str);
+char *cut_str_before_space(char **str, stack_t **h);
 int isInt(char *i);
-char *createLstrippedString(char *buffer);
+char *createLstrippedString(char *buffer, stack_t **h);
 #endif
 

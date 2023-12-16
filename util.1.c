@@ -2,11 +2,12 @@
 
 /**
  * concat - concatinate string arguments into one new big string
+ * @h: stack to be freed on NULL return of malloc
  * @count: count of passed variadic arguments
  *
  * Return: new string (should get free() when no longer needed)
  */
-char *concat(int count, ...)
+char *concat(stack_t **h, int count, ...)
 {
 	va_list args;
 	char *result;
@@ -15,13 +16,13 @@ char *concat(int count, ...)
 	unsigned int len;
 
 	va_start(args, count);
-	result = malloc(1);
+	result = my_malloc(1, h);
 	result[0] = '\0';
 	for (i = 0; i < count; i++)
 	{
 		str = va_arg(args, char*);
 		len = strlen(result);
-		result = my_realloc(result, len + 1, len + strlen(str) + 1);
+		result = my_realloc(result, len + 1, len + strlen(str) + 1, h);
 		strcat(result, str);
 	}
 	va_end(args);
@@ -41,10 +42,11 @@ void lstrip(char **str)
 /**
  * cut_str_before_space - extract the word on the left before spaces
  * @str: ptr to string
+ * @h: stack to be freed on NULL return of malloc
  *
  * Return: new string (should get free() when no longer needed)
  */
-char *cut_str_before_space(char **str)
+char *cut_str_before_space(char **str, stack_t **h)
 {
 	int idx = 0;
 	char *result, chr;
@@ -58,14 +60,14 @@ char *cut_str_before_space(char **str)
 	}
 	if (idx)
 	{
-		result = my_malloc(idx + 1);
+		result = my_malloc(idx + 1, h);
 		memcpy(result, *str, idx);
 		result[idx] = '\0';
 		(*str) += idx;
 	}
 	else
 	{
-		result = my_malloc(1);
+		result = my_malloc(1, h);
 		result[0] = 0;
 	}
 	return (result);
@@ -90,10 +92,11 @@ int isInt(char *i)
 /**
  * createLstrippedString - create new string whose removed spaces on the left
  * @buffer: string
+ * @h: stack to be freed on NULL return of malloc
  *
  * Return: new string (should get free() when no longer needed)
  */
-char *createLstrippedString(char *buffer)
+char *createLstrippedString(char *buffer, stack_t **h)
 {
 	unsigned int idx = 0, len;
 	char *bufferPtr;
@@ -103,12 +106,12 @@ char *createLstrippedString(char *buffer)
 	len = strlen(buffer);
 	if (idx)
 	{
-		bufferPtr = my_malloc(len - idx + 1);
+		bufferPtr = my_malloc(len - idx + 1, h);
 		memcpy(bufferPtr, buffer + idx, len - idx + 1);
 	}
 	else
 	{
-		bufferPtr = my_malloc(len + 1);
+		bufferPtr = my_malloc(len + 1, h);
 		strcpy(bufferPtr, buffer);
 	}
 	free(buffer);

@@ -18,20 +18,16 @@ void exit_with_err(char *err_msg, unsigned int free_str, stack_t **stack)
 /**
  * my_malloc - custom malloc that handles NULL return
  * @size: size of memory to be allocated
+ * @h: stack to be freed on NULL return of malloc
  *
  * Return: void pointer
  */
-void *my_malloc(size_t size)
+void *my_malloc(size_t size, stack_t **h)
 {
 	void *ptr = malloc(size);
 
 	if (!ptr)
-	{
-		/* exit_with_err("Error: malloc failed\n", 0); */
-		/* FIXME: free the stack here*/
-		fprintf(stderr, "%s", "Error: malloc failed\n");
-		exit(EXIT_FAILURE);
-	}
+		exit_with_err("Error: malloc failed\n", 0, h);
 	return (ptr);
 }
 
@@ -40,10 +36,11 @@ void *my_malloc(size_t size)
  * @ptr: pointer to mem to
  * @old_size: current size of @ptr be realocatted
  * @new_size: new size
+ * @h: stack to be freed on NULL return of malloc
  *
  * Return: void pointer
  */
-void *my_realloc(void *ptr, size_t old_size, size_t new_size)
+void *my_realloc(void *ptr, size_t old_size, size_t new_size, stack_t **h)
 {
 	void *new_ptr;
 	size_t copy_size;
@@ -53,7 +50,7 @@ void *my_realloc(void *ptr, size_t old_size, size_t new_size)
 		free(ptr);
 		return (NULL);
 	}
-	new_ptr = my_malloc(new_size);
+	new_ptr = my_malloc(new_size, h);
 	if (!new_ptr)
 		return (NULL);
 	if (ptr)
@@ -68,12 +65,13 @@ void *my_realloc(void *ptr, size_t old_size, size_t new_size)
 /**
  * strdup - duplicate a string
  * @str: string to duplicate
+ * @h: stack to be freed on NULL return of malloc
  *
  * Return: new string (should get free() when no longer needed)
  */
-char *strdup(const char *str)
+char *strdup(const char *str, stack_t **h)
 {
-	char *dup = malloc(strlen(str) + 1);
+	char *dup = my_malloc(strlen(str) + 1, h);
 
 	if (dup)
 		strcpy(dup, str);

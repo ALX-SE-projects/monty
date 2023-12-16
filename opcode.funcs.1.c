@@ -18,7 +18,7 @@ void __sub(stack_t **h, char *strLineNumber)
 
 	if (get_dlist_len(h) < 2)
 		exit_with_err(
-			concat(3, "L", strLineNumber, ": can't sub, stack too short\n"),
+			concat(h, 3, "L", strLineNumber, ": can't sub, stack too short\n"),
 				1, h);
 	t = (*h)->next;
 	t->n -= (*h)->n;
@@ -36,12 +36,12 @@ void __div(stack_t **h, char *strLineNumber)
 
 	if (get_dlist_len(h) < 2)
 		exit_with_err(
-			concat(3, "L", strLineNumber, ": can't div, stack too short\n"),
+			concat(h, 3, "L", strLineNumber, ": can't div, stack too short\n"),
 				1, h);
 
 	if ((*h)->n == 0)
 		exit_with_err(
-			concat(3, "L", strLineNumber, ": division by zero\n"),
+			concat(h, 3, "L", strLineNumber, ": division by zero\n"),
 				1, h);
 	t = (*h)->next;
 	t->n /= (*h)->n;
@@ -59,7 +59,7 @@ void __mul(stack_t **h, char *strLineNumber)
 
 	if (get_dlist_len(h) < 2)
 		exit_with_err(
-			concat(3, "L", strLineNumber, ": can't mul, stack too short\n"),
+			concat(h, 3, "L", strLineNumber, ": can't mul, stack too short\n"),
 				1, h);
 	t = (*h)->next;
 	t->n *= (*h)->n;
@@ -77,11 +77,11 @@ void __mod(stack_t **h, char *strLineNumber)
 
 	if (get_dlist_len(h) < 2)
 		exit_with_err(
-			concat(3, "L", strLineNumber, ": can't mod, stack too short\n"),
+			concat(h, 3, "L", strLineNumber, ": can't mod, stack too short\n"),
 				1, h);
 	if ((*h)->n == 0)
 		exit_with_err(
-			concat(3, "L", strLineNumber, ": division by zero\n"),
+			concat(h, 3, "L", strLineNumber, ": division by zero\n"),
 				1, h);
 	t = (*h)->next;
 	t->n %= (*h)->n;

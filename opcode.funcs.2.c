@@ -9,12 +9,12 @@ void __pchar(stack_t **h, char *strLineNumber)
 {
 	if (!h || !(*h))
 		exit_with_err(
-			concat(3, "L", strLineNumber, ": can't pchar, stack empty\n"),
+			concat(h, 3, "L", strLineNumber, ": can't pchar, stack empty\n"),
 				1, h);
 	if ((*h)->n < 0 || (*h)->n >= 128)
 		exit_with_err(
-			concat(3, "L", strLineNumber, ": can't pchar, value out of range\n"),
-				1, h);
+			concat(h, 3, "L", strLineNumber,
+				   ": can't pchar, value out of range\n"), 1, h);
 	printf("%c\n", (*h)->n);
 }
 

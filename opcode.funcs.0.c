@@ -25,7 +25,7 @@ void __pint(stack_t **h, char *strLineNumber)
 		printf("%d\n", (*h)->n);
 	else
 		exit_with_err(
-			concat(3, "L", strLineNumber, ": can't pint, stack empty\n"),
+			concat(h, 3, "L", strLineNumber, ": can't pint, stack empty\n"),
 				1, h);
 }
 
@@ -40,7 +40,7 @@ void __pop(stack_t **h, char *strLineNumber)
 
 	if (!h || !(*h))
 		exit_with_err(
-			concat(3, "L", strLineNumber, ": can't pop an empty stack\n"),
+			concat(h, 3, "L", strLineNumber, ": can't pop an empty stack\n"),
 				1, h);
 	t = *h;
 	*h = (*h)->next;
@@ -58,7 +58,7 @@ void __swap(stack_t **h, char *strLineNumber)
 
 	if (get_dlist_len(h) < 2)
 		exit_with_err(
-			concat(3, "L", strLineNumber, ": can't swap, stack too short\n"),
+			concat(h, 3, "L", strLineNumber, ": can't swap, stack too short\n"),
 				1, h);
 	t = *h;
 	*h = (*h)->next;
@@ -79,7 +79,7 @@ void __add(stack_t **h, char *strLineNumber)
 
 	if (get_dlist_len(h) < 2)
 		exit_with_err(
-			concat(3, "L", strLineNumber, ": can't add, stack too short\n"),
+			concat(h, 3, "L", strLineNumber, ": can't add, stack too short\n"),
 				1, h);
 	t = (*h)->next;
 	t->n += (*h)->n;

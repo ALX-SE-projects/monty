@@ -18,17 +18,17 @@ void parseLine(
 
 	sprintf(strLineNumber, "%u", lineNumber);
 	/* lstrip(&line); */
-	opcode = cut_str_before_space(line);
+	opcode = cut_str_before_space(line, h);
 	/* printf("--%s-%d\n", opcode, strcmp(*line, "push")); */
 	/* (*line) += strlen(opcode); */
 	if (!strcmp(opcode, "push"))
 	{
 		lstrip(line);
-		arg = cut_str_before_space(line);
+		arg = cut_str_before_space(line, h);
 		/* printf("-%s-%s-%d-%ld-\n", opcode, arg, arg[1], strlen(arg)); */
 		if (!strlen(arg) || !isInt(arg))
 			exit_with_err(
-				concat(3, "L", strLineNumber, ": usage: push integer\n"),
+				concat(h, 3, "L", strLineNumber, ": usage: push integer\n"),
 					1, h);
 		__push(h, atoi(arg), LIFO);
 		free(arg);
@@ -44,7 +44,8 @@ void parseLine(
 	else if (!strcmp(opcode, "nop"))
 		__nop();
 	else
-		parseLine2(h, opcode, strLineNumber, LIFO);
+		parseLine2(h, strdup(opcode, h), strLineNumber, LIFO);
+	free(opcode);
 
 }
 
@@ -59,6 +60,8 @@ void parseLine(
 void parseLine2(
 	stack_t **h, char *opcode, char *strLineNumber, unsigned int *LIFO)
 {
+	char *unknown_instruction_exit_msg;
+
 	if (!strcmp(opcode, "sub"))
 		__sub(h, strLineNumber);
 	else if (!strcmp(opcode, "div"))
@@ -82,9 +85,12 @@ void parseLine2(
 	else if (!strcmp(opcode, "pall"))
 		__pall(h);
 	else
-		exit_with_err(
-			concat(5, "L", strLineNumber, ": unknown instruction ", opcode, "\n"),
-		1, h);
+	{
+		unknown_instruction_exit_msg = concat(h, 5, "L", strLineNumber,
+			": unknown instruction ", opcode, "\n");
+		free(opcode);
+		exit_with_err(unknown_instruction_exit_msg, 1, h);
+	}
 	free(opcode);
 }
 
@@ -106,13 +112,13 @@ int main(int argc, char *argv[])
 	if (argc != 2)
 		exit_with_err("USAGE: monty file\n", 0, &stack);
 	else if (!is_regular_file(argv[1]))
-		exit_with_err(concat(3, "Error: Can't open file ", argv[1], "\n"),
+		exit_with_err(concat(&stack, 3, "Error: Can't open file ", argv[1], "\n"),
 			1, &stack);
 	filename = argv[1];
 	filePointer = fopen(filename, "r");
 	while (fgets(buffer, BUF_SIZE, filePointer))
 	{
-		bufferPtr = createLstrippedString(strdup(buffer));
+		bufferPtr = createLstrippedString(strdup(buffer, &stack), &stack);
 		bufferPtrReserve = bufferPtr;
 		if (strcmp("\n", bufferPtr))
 			parseLine(&stack, &bufferPtr, lineNumber, &LIFO);
