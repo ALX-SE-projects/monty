@@ -21,9 +21,9 @@
  */
 typedef struct stack_s
 {
-        int n;
-        struct stack_s *prev;
-        struct stack_s *next;
+	int n;
+	struct stack_s *prev;
+	struct stack_s *next;
 } stack_t;
 
 /**
@@ -36,40 +36,51 @@ typedef struct stack_s
  */
 typedef struct instruction_s
 {
-        char *opcode;
-        void (*f)(stack_t **stack, unsigned int line_number);
+	char *opcode;
+	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
 
-void __push(stack_t **h, int val);
+void __push(stack_t **h, int val, unsigned int *LIFO);
 void __pint(stack_t **h, char *strLineNumber);
 void __pop(stack_t **h, char *strLineNumber);
 void __swap(stack_t **h, char *strLineNumber);
-void __add(__attribute__((unused)) stack_t **h);
-void __nop(__attribute__((unused)) stack_t **h);
-void __sub(__attribute__((unused)) stack_t **h);
-void __div(__attribute__((unused)) stack_t **h);
-void __mul(__attribute__((unused)) stack_t **h);
-void __mod(__attribute__((unused)) stack_t **h);
-void __pchar(__attribute__((unused)) stack_t **h);
-void __pstr(__attribute__((unused)) stack_t **h);
-void __rotl(__attribute__((unused)) stack_t **h);
-void __rotr(__attribute__((unused)) stack_t **h);
-void __stack(__attribute__((unused)) stack_t **h);
-void __queue(__attribute__((unused)) stack_t **h);
+void __add(stack_t **h, char *strLineNumber);
+void __nop(void);
+void __sub(stack_t **h, char *strLineNumber);
+void __div(stack_t **h, char *strLineNumber);
+void __mul(stack_t **h, char *strLineNumber);
+void __mod(stack_t **h, char *strLineNumber);
+void __pchar(stack_t **h, char *strLineNumber);
+void __pstr(stack_t **h);
+void __rotl(stack_t **h);
+void __rotr(stack_t **h);
+void __stack(unsigned int *LIFO);
+void __queue(unsigned int *LIFO);
 void __pall(stack_t **h);
 char *concat(int count, ...);
 
 void *my_malloc(size_t size);
-void exit_with_err(char *err_msg, unsigned int free_str);
 size_t print_dlistint(stack_t *h);
 size_t dlistint_len(const stack_t *h);
 stack_t *add_dnodeint(stack_t **head, const int n);
 stack_t *add_dnodeint_end(stack_t **head, const int n);
 void free_dlistint(stack_t **head);
+size_t get_dlist_len(stack_t **h);
 stack_t *get_dnodeint_at_index(stack_t *head, unsigned int index);
 int sum_dlistint(stack_t *head);
 stack_t *insert_dnodeint_at_index(stack_t **h, unsigned int idx, int n);
 int delete_dnodeint_at_index(stack_t **head, unsigned int index);
+
+void exit_with_err(char *err_msg, unsigned int free_str, stack_t **stack);
+void *my_malloc(size_t size);
+void *my_realloc(void *ptr, size_t old_size, size_t new_size);
+char *strdup(const char *str);
+int is_regular_file(const char *path);
+char *concat(int count, ...);
+void lstrip(char **str);
+char *cut_str_before_space(char **str);
+int isInt(char *i);
+char *createLstrippedString(char *buffer);
 #endif
 
