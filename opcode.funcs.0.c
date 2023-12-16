@@ -15,7 +15,7 @@ void __pint(__attribute__((unused)) stack_t **h, char *strLineNumber)
 		printf("%d\n", (*h)->n);
 	else
 		exit_with_err(
-			concat(3, "L", strLineNumber, ": can't pint, stack empty\n"));
+			concat(3, "L", strLineNumber, ": can't pint, stack empty\n"), 0);
 }
 
 void __pop(__attribute__((unused)) stack_t **h)
