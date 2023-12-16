@@ -44,7 +44,7 @@ void parseLine(
 	else if (!strcmp(opcode, "nop"))
 		__nop();
 	else
-		parseLine2(h, strdup(opcode, h), strLineNumber, LIFO);
+		parseLine2(h, my_strdup(opcode, h), strLineNumber, LIFO);
 	free(opcode);
 
 }
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
 	filePointer = fopen(filename, "r");
 	while (fgets(buffer, BUF_SIZE, filePointer))
 	{
-		bufferPtr = createLstrippedString(strdup(buffer, &stack), &stack);
+		bufferPtr = createLstrippedString(my_strdup(buffer, &stack), &stack);
 		bufferPtrReserve = bufferPtr;
 		if (strcmp("\n", bufferPtr))
 			parseLine(&stack, &bufferPtr, lineNumber, &LIFO);

@@ -63,13 +63,13 @@ void *my_realloc(void *ptr, size_t old_size, size_t new_size, stack_t **h)
 }
 
 /**
- * strdup - duplicate a string
+ * my_strdup - duplicate a string
  * @str: string to duplicate
  * @h: stack to be freed on NULL return of malloc
  *
  * Return: new string (should get free() when no longer needed)
  */
-char *strdup(const char *str, stack_t **h)
+char *my_strdup(const char *str, stack_t **h)
 {
 	char *dup = my_malloc(strlen(str) + 1, h);
 
