@@ -3,16 +3,17 @@
 unsigned int LIFO = 1;
 stack_t *stack = NULL;
 
-char *strdup(const char *str) {
-  char *dup = malloc(strlen(str) + 1);
-  if (dup) {
-      strcpy(dup, str);
-  }
-  return dup;
+char *strdup(const char *str)
+{
+	char *dup = malloc(strlen(str) + 1);
+
+	if (dup)
+		strcpy(dup, str);
+	return (dup);
 }
 
 
-void free_stack()
+void free_stack(void)
 {
 	if (stack)
 		free_dlistint(stack);
@@ -20,30 +21,31 @@ void free_stack()
 
 int is_regular_file(const char *path)
 {
-   struct stat path_stat;
-   if (access(path, F_OK) != -1 && stat(path, &path_stat) == 0) {
-       return S_ISREG(path_stat.st_mode);
-   } else {
-       return 0;
-   }
+	struct stat path_stat;
+
+	if (access(path, F_OK) != -1 && stat(path, &path_stat) == 0)
+		return (S_ISREG(path_stat.st_mode));
+	return (0);
 }
 
-char *concat(int count, ...) {
-   va_list args;
-   char* result;
-   int i;
-   char* str;
+char *concat(int count, ...)
+{
+	va_list args;
+	char *result;
+	int i;
+	char *str;
 
-   va_start(args, count);
-   result = malloc(1);
-   result[0] = '\0';
-   for (i = 0; i < count; i++) {
-       str = va_arg(args, char*);
-       result = realloc(result, strlen(result) + strlen(str) + 1);
-       strcat(result, str);
-   }
-   va_end(args);
-   return result;
+	va_start(args, count);
+	result = malloc(1);
+	result[0] = '\0';
+	for (i = 0; i < count; i++)
+	{
+		str = va_arg(args, char*);
+		result = realloc(result, strlen(result) + strlen(str) + 1);
+		strcat(result, str);
+	}
+	va_end(args);
+	return (result);
 }
 
 void exit_with_err(char *err_msg, unsigned int free_str)
@@ -66,7 +68,7 @@ void *my_malloc(size_t size)
 
 void lstrip(char **str)
 {
-	while ((*str)[0] == SPACE)
+	while ((*str)[0] && (*str)[0] == ' ')
 		(*str)++;
 }
 
@@ -75,53 +77,56 @@ void lstrip(char **str)
  */
 char *cut_str_before_space(char **str)
 {
-	unsigned int idx = 0;
-	char result[BUF_SIZE], chr, *resultPtr;
+	int idx = 0;
+	char *result, chr;
 
 	while (1)
 	{
 		chr = (*str)[idx];
-		if (!(chr != '\0' && chr != SPACE && chr != '\n'))
+		if (!(chr != '\0' && chr != ' ' && chr != '\n'))
 			break;
 		idx++;
 	}
-
 	if (idx)
 	{
-		strncpy(result, *str, idx);
+		result = my_malloc(idx + 1);
+		memcpy(result, *str, idx);
 		result[idx] = '\0';
-		resultPtr = strdup(result);
+		(*str) += idx;
 	}
 	else
-		resultPtr = strdup("");
-	return (resultPtr);
+	{
+		result = my_malloc(1);
+		result[0] = 0;
+	}
+	return (result);
 }
 
 int isInt(char *i)
 {
 	char *end;
-	strtol(i, &end, 10);
 
-	if (*end != '\0') {
+	strtol(i, &end, 10);
+	if (*end != '\0')
 		return (0);
-	}
 	return (1);
 }
 
 void parseLine(stack_t **h, char **line, const unsigned int lineNumber)
 {
-	char *opcode, *arg;
+	char *opcode = my_malloc(1), *arg;
 	char strLineNumber[BUF_SIZE];
 
 	sprintf(strLineNumber, "%u", lineNumber);
 	/* lstrip(&line); */
 	opcode = cut_str_before_space(line);
-	(*line) += strlen(opcode);
+	/* printf("--%s-%d\n", opcode, strcmp(*line, "push")); */
+	/* (*line) += strlen(opcode); */
 	if (!strcmp(opcode, "push"))
 	{
 		lstrip(line);
 		arg = cut_str_before_space(line);
-		/* printf("-%s-%s-%c-%ld-\n", opcode, arg, arg[0], strlen(arg)); */
+		/* printf("-%s-%s-%d-%ld-\n", opcode, arg, arg[1], strlen(arg)); */
 		if (!strlen(arg) || !isInt(arg))
 			exit_with_err(concat(3, "L", strLineNumber, ": usage: push integer\n"), 1);
 		__push(h, atoi(arg));
@@ -160,34 +165,50 @@ void parseLine(stack_t **h, char **line, const unsigned int lineNumber)
 	else if (!strcmp(opcode, "pall"))
 		__pall(h);
 	else
-		exit_with_err(concat(5, "L", strLineNumber, ": unknown instruction ", opcode, "\n"), 1);
+		exit_with_err(
+			concat(5, "L", strLineNumber, ": unknown instruction ", opcode, "\n"),
+		1);
 	free(opcode);
 }
 
+char *createLstrippedString(char *buffer)
+{
+	unsigned int idx = 0, len;
+	char *bufferPtr;
 
+	while (buffer[idx] == ' ')
+		idx++;
+	len = strlen(buffer);
+	if (idx)
+	{
+		bufferPtr = my_malloc(len - idx + 1);
+		memcpy(bufferPtr, buffer + idx, len - idx + 1);
+	}
+	else
+	{
+		bufferPtr = my_malloc(len);
+		strcpy(bufferPtr, buffer);
+	}
+	return (bufferPtr);
+}
 
 int main(int argc, char *argv[])
 {
 	FILE *filePointer;
-	char buffer[BUF_SIZE];
-	char *bufferPtr, *bufferPtrReserve;
-	char *filename;
+	char buffer[BUF_SIZE], *bufferPtr, *bufferPtrReserve, *filename;
 	unsigned int lineNumber = 1;
-	stack = NULL;
 
+	stack = NULL;
 	if (argc != 2)
 		exit_with_err("USAGE: monty file\n", 0);
 	else if (!is_regular_file(argv[1]))
 		exit_with_err(concat(3, "Error: Can't open file ", argv[1], "\n"), 1);
-
 	filename = argv[1];
 	filePointer = fopen(filename, "r");
-	while(fgets(buffer, BUF_SIZE, filePointer))
+	while (fgets(buffer, BUF_SIZE, filePointer))
 	{
-		bufferPtr = my_malloc(strlen(buffer));
+		bufferPtr = createLstrippedString(buffer);
 		bufferPtrReserve = bufferPtr;
-		strcpy(bufferPtr, buffer);
-		lstrip(&bufferPtr);
 		if (strcmp("\n", bufferPtr))
 			parseLine(&stack, &bufferPtr, lineNumber);
 		lineNumber++;

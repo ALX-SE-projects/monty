@@ -9,7 +9,6 @@
 #include <stdarg.h>
 
 #define BUF_SIZE 1024
-#define SPACE 32
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
