@@ -42,7 +42,7 @@ typedef struct instruction_s
 
 
 void __push(stack_t **h, int val);
-void __pint(__attribute__((unused)) stack_t **h);
+void __pint(stack_t **h, char *strLineNumber);
 void __pop(__attribute__((unused)) stack_t **h);
 void __swap(__attribute__((unused)) stack_t **h);
 void __add(__attribute__((unused)) stack_t **h);
@@ -58,9 +58,10 @@ void __rotr(__attribute__((unused)) stack_t **h);
 void __stack(__attribute__((unused)) stack_t **h);
 void __queue(__attribute__((unused)) stack_t **h);
 void __pall(stack_t **h);
+char *concat(int count, ...);
 
 void *my_malloc(size_t size);
-
+void exit_with_err(char *err_msg, unsigned int free_str);
 size_t print_dlistint(stack_t *h);
 size_t dlistint_len(const stack_t *h);
 stack_t *add_dnodeint(stack_t **head, const int n);

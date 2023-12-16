@@ -3,16 +3,9 @@
 unsigned int LIFO = 1;
 stack_t *stack = NULL;
 
-
-void free_stack(void)
-{
-	if (stack)
-		free_dlistint(stack);
-}
-
 void exit_with_err(char *err_msg, unsigned int free_str)
 {
-	free_stack();
+	free_dlistint(stack);
 	fprintf(stderr, "%s", err_msg);
 	if (free_str)
 		free(err_msg);
@@ -23,7 +16,7 @@ void *my_malloc(size_t size)
 {
 	void *ptr = malloc(size);
 
-	if (ptr == NULL)
+	if (!ptr)
 		exit_with_err("Error: malloc failed\n", 0);
 	return (ptr);
 }
@@ -134,7 +127,7 @@ int isInt(char *i)
 	return (1);
 }
 
-void parseLine(stack_t **h, char **line, const unsigned int lineNumber)
+void parseLine(stack_t **h, char **line, unsigned int lineNumber)
 {
 	char *opcode, *arg;
 	char strLineNumber[BUF_SIZE];
@@ -155,7 +148,7 @@ void parseLine(stack_t **h, char **line, const unsigned int lineNumber)
 		free(arg);
 	}
 	else if (!strcmp(opcode, "pint"))
-		__pint(h);
+		__pint(h, strLineNumber);
 	else if (!strcmp(opcode, "pop"))
 		__pop(h);
 	else if (!strcmp(opcode, "swap"))
@@ -237,7 +230,7 @@ int main(int argc, char *argv[])
 		lineNumber++;
 		free(bufferPtrReserve);
 	}
-	free_stack();
+	free_dlistint(stack);
 	fclose(filePointer);
 	return (0);
 }
