@@ -25,7 +25,7 @@ void __pop(stack_t **h, char *strLineNumber)
 	if (!h || !(*h))
 		exit_with_err(
 			concat(3, "L", strLineNumber, ": can't pop an empty stack\n"), 1);
-	t = *doubly;
+	t = *h;
 	*h = (*h)->next;
 	free(t);
 }
