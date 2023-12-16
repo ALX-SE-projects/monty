@@ -122,8 +122,8 @@ char *createLstrippedString(char *buffer, stack_t **h)
 	*/
 	if (bufferPtr[0] == '#')
 	{
-		buffer[0] = '\n';
-		buffer[1] = '\0';
+		bufferPtr[0] = '\n';
+		bufferPtr[1] = '\0';
 	}
 	return (bufferPtr);
 }
